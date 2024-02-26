@@ -49,7 +49,7 @@
             <td>{{ Student.level }}</td>
             <td>{{ Student.gym }}</td>
             <td>{{ Student.instructor }}</td>
-            <td class="d-flex justify-center">
+            <td class="d-flex justify-center" style="align-items:center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn> -->
               <!-- <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateStudent :data="Student" />

@@ -41,7 +41,7 @@
                   (v) => !isNaN(v) || 'Invalid Value',
                 ]"
                 :counter="20"
-                label="Age"
+                label="Minimum Weight"
                 required
               ></v-text-field>
             </v-col>
@@ -50,11 +50,13 @@
                 variant="solo-filled"
                 v-model="categoryDetail.max"
                 :rules="[
+                  (v) => v > categoryDetail.min || 'Greater than minimum required!',
                   (v) => !!v || 'Maximum value required',
                   (v) => !isNaN(v) || 'Invalid Value',
                 ]"
+                :disabled="categoryDetail.min == ''"
                 :counter="20"
-                label="Weight"
+                label="Maximum Weight"
                 required
               ></v-text-field>
             </v-col>

@@ -43,7 +43,7 @@
             <td>{{ categ.name }}</td>
             <td>{{ categ.min }}</td>
             <td>{{ categ.max }}</td>
-            <td class="d-flex justify-center">
+            <td class="d-flex justify-center" style="align-items:center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn>
               <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateCategory :data="categ" />
@@ -76,7 +76,7 @@
             <td>{{ age.name }}</td>
             <td>{{ age.min }}</td>
             <td>{{ age.max }}</td>
-            <td class="d-flex justify-center">
+            <td class="d-flex justify-center" style="align-items:center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn>
               <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateAge :data="age" />

@@ -186,7 +186,6 @@ export default {
       }
     },
     tab(to) {
-      console.log("CURRENT TAB: ", to);
       this.getCategoryData();
     },
   },
@@ -231,7 +230,6 @@ export default {
           studentArray.push(data);
       });
 
-      console.log("BRACKET", JSON.parse(JSON.stringify(getBracketIndex)));
       if (
         getMatchIndex < 0 ||
         (getMatchIndex >= 0 && getLevelIndex.length <= 0)
@@ -257,7 +255,6 @@ export default {
       }
     },
     ageGroup(data) {
-      console.log("DATA", data);
       this.ageMin = data.min;
       this.ageMax = data.max;
       this.selectedAgeBracket = data.name;
