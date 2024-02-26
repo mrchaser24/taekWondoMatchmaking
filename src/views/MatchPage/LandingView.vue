@@ -15,10 +15,10 @@
           <v-btn
             class="global-btn"
             color="blue-lighten-1"
-            :disabled="generateButtonEnabled"
+            :disabled="generateButtonEnabled || studentList.length < 1"
             @click="generateMatching()">Generate Match</v-btn>
-          <v-btn class="global-btn" color="blue-lighten-1" @click="shuffle(matchResultList)">Shuffle</v-btn>
-          <v-btn class="global-btn" color="green-lighten-1" @click="printWindows()">Print</v-btn>
+          <v-btn :disabled="studentList.length < 1" class="global-btn" color="blue-lighten-1" @click="shuffle(matchResultList)">Shuffle</v-btn>
+          <v-btn :disabled="studentList.length < 1" class="global-btn" color="green-lighten-1" @click="printWindows()">Print</v-btn>
         </div>
       </div>
     </div>
@@ -278,7 +278,7 @@ export default {
 </script>
 
 <style scoped>
-div >>> .match-container {
+:deep(.match-container) {
   /* border-radius: 5px;
   box-shadow:
     2px 2px 5px #cacaca,
@@ -286,17 +286,17 @@ div >>> .match-container {
   width: 80%;
   margin: 0 auto;
 }
-div >>> .dont-print {
+:deep(.dont-print) {
   display: block;
 }
 @media print {
-  div >>> .dont-print {
+  :deep(.dont-print) {
     display: none !important;
   }
-  div >>> .print-this {
+  :deep(.print-this) {
     padding: 20px;
   }
-  div >>> .match-container {
+  :deep(.match-container) {
     border-radius: 5px;
     box-shadow: none;
     width: 100%;
