@@ -1,16 +1,20 @@
 <template>
   <div class="ma-5 pa-5" style="margin: auto">
     <div
-      class="py-5 d-flex justify-space-between"
+      class="py-5"
       style="width: 80%; margin: 0 auto"
     >
       <div>
-        <h1>Category Information</h1>
-        <v-btn @click="$router.push('/')">Go Home</v-btn>
+        <h1 class="py-5">Category Information</h1>
       </div>
-      <div>
-        <AddCategory />
-        <AddAge />
+      <div class=" d-flex justify-space-between">
+        <div>
+          <v-btn class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
+        </div>
+        <div>
+          <AddCategory />
+          <AddAge />
+        </div>
       </div>
     </div>
 
@@ -21,7 +25,9 @@
           border-radius: 5px;
           box-shadow:
             2px 2px 5px #cacaca,
-            inset 2px 2px 5px #e7e7e7;
+            2px 2px 5px #e7e7e7;
+          width: 50%;
+          margin: 0 auto;
         "
       >
         <thead fixed-header>
@@ -37,7 +43,7 @@
             <td>{{ categ.name }}</td>
             <td>{{ categ.min }}</td>
             <td>{{ categ.max }}</td>
-            <td class="text-center">
+            <td class="d-flex justify-center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn>
               <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateCategory :data="categ" />
@@ -52,7 +58,9 @@
           border-radius: 5px;
           box-shadow:
             2px 2px 5px #cacaca,
-            inset 2px 2px 5px #e7e7e7;
+            2px 2px 5px #e7e7e7;
+          width: 50%;
+          margin: 0 auto;
         "
       >
         <thead fixed-header>
@@ -68,7 +76,7 @@
             <td>{{ age.name }}</td>
             <td>{{ age.min }}</td>
             <td>{{ age.max }}</td>
-            <td class="text-center">
+            <td class="d-flex justify-center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn>
               <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateAge :data="age" />

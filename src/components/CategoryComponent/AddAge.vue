@@ -3,6 +3,7 @@
     <template v-slot:activator="{ props }">
       <v-btn
         color="blue-lighten-1"
+        class="global-btn"
         dark
         v-bind="props"
         @click="createAgeDialog = true"

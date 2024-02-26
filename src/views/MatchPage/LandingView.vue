@@ -9,15 +9,16 @@
       </div>
       <div class="d-flex justify-space-between">
         <div>
-          <v-btn class="global-btn primary-btn" @click="$router.push('/')">Go Home</v-btn>
+          <v-btn class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
         </div>
         <div>
           <v-btn
-            class="global-btn primary-btn"
+            class="global-btn"
+            color="blue-lighten-1"
             :disabled="generateButtonEnabled"
             @click="generateMatching()">Generate Match</v-btn>
-          <v-btn class="global-btn primary-btn" @click="shuffle(matchResultList)">Shuffle</v-btn>
-          <v-btn class="global-btn green-btn" style="margin-right: 0px !important" @click="printWindows()">Print</v-btn>
+          <v-btn class="global-btn" color="blue-lighten-1" @click="shuffle(matchResultList)">Shuffle</v-btn>
+          <v-btn class="global-btn" color="green-lighten-1" @click="printWindows()">Print</v-btn>
         </div>
       </div>
     </div>

@@ -19,7 +19,6 @@ export default {
     methods: {
         selectTab(tab){
             this.tabs = tab
-            console.log("CLICKEDD", tab);
             if(tab == 1) this.$router.push('/Student')
             if(tab == 2) this.$router.push('/Category')
             if(tab == 3) this.$router.push('/Matching')
@@ -54,5 +53,11 @@ export default {
     display: flex;
     align-items: center;
     margin: 0px 40px;
+}
+
+@media print {
+  .header-main {
+    display: none !important;
+  }
 }
 </style>

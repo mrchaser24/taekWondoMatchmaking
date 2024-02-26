@@ -1,15 +1,19 @@
 <template>
   <div class="ma-5 pa-5" style="margin: auto">
     <div
-      class="py-5 d-flex justify-space-between"
+      class="py-5"
       style="width: 80%; margin: 0 auto"
     >
       <div>
-        <h1>Student Information</h1>
-        <v-btn @click="$router.push('/')">Go Home</v-btn>
+        <h1 class="py-5">Student Information</h1>
       </div>
-      <div>
-        <AddStudent />
+      <div class="d-flex justify-space-between">
+        <div>
+          <v-btn  class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
+        </div>
+        <div>
+          <AddStudent />
+        </div>
       </div>
     </div>
 
@@ -45,7 +49,7 @@
             <td>{{ Student.level }}</td>
             <td>{{ Student.gym }}</td>
             <td>{{ Student.instructor }}</td>
-            <td class="text-center">
+            <td class="d-flex justify-center">
               <!-- <v-btn class="mx-2" color="success lighten-2">Update</v-btn> -->
               <!-- <v-btn class="mx-2" color="error lighten-2">Delete</v-btn> -->
               <UpdateStudent :data="Student" />
