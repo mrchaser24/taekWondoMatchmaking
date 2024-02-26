@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1 style="text-align: center">Taekwondo Fight Diagram</h1>
+    <h1 style="text-align: center; text-transform: capitalize">Taekwondo Fight Diagram ({{selectedLevel}})</h1>
+    <h3 style="text-align: center; text-transform: capitalize">{{selectedCategory}} - {{ageBracket}}</h3>
     <!-- <v-btn @click="clickMe()">O</v-btn> -->
     <main id="tournament">
       <ul class="round round-1">
@@ -164,7 +165,7 @@
 
 <script>
 export default {
-  props: ["fightList"],
+  props: ["fightList", "selectedCategory", "ageBracket", "selectedLevel"],
   data: () => ({}),
   methods: {
     clickMe() {

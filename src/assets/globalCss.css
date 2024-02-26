@@ -1,0 +1,49 @@
+/* BUTTON */
+.global-btn {
+    padding: 23px 30px !important;
+    width: 200px !important;
+    margin-right: 10px;
+    display: flex;
+    align-content: center;
+}
+.primary-btn {
+    color: white !important;
+    background-color: rgb(47, 158, 255) !important;
+}
+.green-btn {
+    color: white !important;
+    background-color: rgb(0, 210, 38) !important;
+}
+.orange-btn {
+    /* color: white !important; */
+    background-color: rgb(255, 179, 0) !important;
+}
+.red-btn {
+    /* color: white !important; */
+    background-color: rgb(255, 64, 64) !important;
+}
+
+.header-navs {
+    padding: 0px 30px !important;
+    width: 200px !important;
+    margin: auto 10px;
+    display: flex;
+    align-content: center;
+    text-transform: capitalize !important;
+    box-shadow: none !important;
+    background: none !important;
+    color: #fff !important;
+}
+.header-navs span {
+    text-transform: capitalize !important;
+}
+
+/* FIELDS */
+.global-field {
+    width: 180px;
+    padding: 10px;
+    margin-right: 10px;
+}
+.autocomplete-field {
+
+}

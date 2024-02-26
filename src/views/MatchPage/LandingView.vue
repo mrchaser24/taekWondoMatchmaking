@@ -1,19 +1,24 @@
 <template>
-  <div class="ma-5 pa-5" style="margin: auto">
+  <div class="print-container ma-5 pa-5" style="margin: auto">
     <div
-      class="dont-print py-5 d-flex justify-space-between"
+      class="dont-print py-5"
       style="width: 80%; margin: 0 auto"
     >
       <div>
-        <h1>Match Making</h1>
-        <v-btn @click="$router.push('/')">Go Home</v-btn>
+        <h1 class="py-5">Match Making</h1>
       </div>
-      <div>
-        <v-btn :disabled="generateButtonEnabled" @click="generateMatching()"
-          >Generate Match</v-btn
-        >
-        <v-btn @click="shuffle(matchResultList)">Shuffle</v-btn>
-        <v-btn @click="printWindows()">Print</v-btn>
+      <div class="d-flex justify-space-between">
+        <div>
+          <v-btn class="global-btn primary-btn" @click="$router.push('/')">Go Home</v-btn>
+        </div>
+        <div>
+          <v-btn
+            class="global-btn primary-btn"
+            :disabled="generateButtonEnabled"
+            @click="generateMatching()">Generate Match</v-btn>
+          <v-btn class="global-btn primary-btn" @click="shuffle(matchResultList)">Shuffle</v-btn>
+          <v-btn class="global-btn green-btn" style="margin-right: 0px !important" @click="printWindows()">Print</v-btn>
+        </div>
       </div>
     </div>
 
@@ -21,6 +26,7 @@
       <div class="dont-print d-flex" style="width: 100%">
         <div>
           <v-autocomplete
+            class="autocomplete-field global-field"
             v-model="selectedCategory"
             :items="categList"
             item-value="id"
@@ -37,6 +43,7 @@
         </div>
         <div>
           <v-autocomplete
+            class="autocomplete-field global-field"
             v-model="selectedLevel"
             item-value="id"
             item-title="name"
@@ -54,16 +61,36 @@
         </div>
         <div>
           <v-text-field
+            class="global-field"
             v-model="minValue"
-            label="Minimum"
+            label="Min Weight"
             variant="solo-filled"
             readonly
           ></v-text-field>
         </div>
         <div>
           <v-text-field
+            class="global-field"
             v-model="maxValue"
-            label="Maximum"
+            label="Max Weight"
+            variant="solo-filled"
+            readonly
+          ></v-text-field>
+        </div>
+        <div>
+          <v-text-field
+            class="global-field"
+            v-model="ageMin"
+            label="Max Age"
+            variant="solo-filled"
+            readonly
+          ></v-text-field>
+        </div>
+        <div>
+          <v-text-field
+            class="global-field"
+            v-model="ageMax"
+            label="Max Age"
             variant="solo-filled"
             readonly
           ></v-text-field>
@@ -78,31 +105,25 @@
         </div>
       </div> -->
 
-      <v-tabs v-model="tab" color="primary" align-tabs="center">
-        <v-tab :value="1">Landscape</v-tab>
-        <v-tab :value="2">City</v-tab>
-        <v-tab :value="3">Abstract</v-tab>
+      <v-tabs class="dont-print ma-5" color="blue" v-model="tab" align-tabs="center">
+        <div v-for="(item, index) in ageGroupList" :key="index">
+          <v-tab :value="index" @click="ageGroup(item)">{{ item.name }}</v-tab>
+        </div>
       </v-tabs>
       <v-window v-model="tab">
-        <!-- <v-window-item v-for="n in 3" :key="n" :value="n">
-          <v-container fluid>
-            <v-row>
-              <v-col v-for="i in 6" :key="i" cols="12" md="4">
-                <v-img
-                  :src="`https://picsum.photos/500/300?image=${i * n * 5 + 10}`"
-                  :lazy-src="`https://picsum.photos/10/6?image=${
-                    i * n * 5 + 10
-                  }`"
-                  aspect-ratio="1"
-                ></v-img>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-window-item> -->
-        <FightDiagram
-          class="print-this"
-          :fightList="matchResultList.map((e) => e)"
-        />
+        <v-window-item
+          v-for="(item, index) in ageGroupList"
+          :key="index"
+          :value="tab"
+        >
+          <FightDiagram
+            class="print-this"
+            :fightList="matchResultList.map((e) => e)"
+            :ageBracket="selectedAgeBracket"
+            :selectedCategory="categList ? categList[0].name : ''"
+            :selectedLevel="selectedLevel"
+          />
+        </v-window-item>
       </v-window>
     </div>
   </div>
@@ -123,15 +144,21 @@ export default {
     maxValue: 0,
     matchLevel: ["novice", "advance"],
     tab: 0,
+    ageMin: 0,
+    ageMax: 0,
+    selectedAgeBracket: "",
   }),
   computed: {
     ...mapState({
       categList: (state) => state.categoryStore.categoryList,
+      ageGroupList: (state) => state.categoryStore.ageGroupList,
       matchList: (state) => state.matchMakingStore.matchList,
       studentList: (state) => state.studentStore.studentList,
       matchResultList() {
         let getLevelIndex = this.matchList.filter(
-          (i) => i.level == this.selectedLevel,
+          (i) =>
+            i.level == this.selectedLevel &&
+            i.ageBracket == this.selectedAgeBracket,
         );
         let getIndex = getLevelIndex
           .map((i) => i.matchDivisionId)
@@ -159,6 +186,7 @@ export default {
     },
     tab(to) {
       console.log("CURRENT TAB: ", to);
+      this.getCategoryData();
     },
   },
   methods: {
@@ -180,19 +208,29 @@ export default {
       let getMatchIndex = this.matchList
         .map((i) => i.matchDivisionId)
         .indexOf(this.selectedCategory);
+      let getBracketIndex = this.matchList
+        .filter((i) => i.matchDivisionId == this.selectedCategory)
+        .filter((i) => i.ageBracket == this.selectedAgeBracket);
       let getLevelIndex = this.matchList
         .filter((i) => i.matchDivisionId == this.selectedCategory)
-        .filter((i) => i.level == this.selectedLevel);
+        .filter(
+          (i) =>
+            i.level == this.selectedLevel &&
+            i.ageBracket == this.selectedAgeBracket,
+        );
 
       this.studentList.forEach((data) => {
         if (
           data.weight >= this.minValue &&
           data.weight <= this.maxValue &&
-          this.selectedLevel.toLowerCase() == data.level.toLowerCase()
+          data.level.toLowerCase() == this.selectedLevel.toLowerCase() &&
+          data.age >= this.ageMin &&
+          data.age <= this.ageMax
         )
           studentArray.push(data);
       });
 
+      console.log("BRACKET", JSON.parse(JSON.stringify(getBracketIndex)));
       if (
         getMatchIndex < 0 ||
         (getMatchIndex >= 0 && getLevelIndex.length <= 0)
@@ -202,21 +240,27 @@ export default {
           matchDivisionId: this.categList[getCategIndex].id,
           name: this.categList[getCategIndex].name,
           level: this.selectedLevel,
+          ageBracket: this.selectedAgeBracket,
           match: [...studentArray],
         });
       } else if (getMatchIndex >= 0 && getLevelIndex.length > 0) {
         console.log("MATCH UPDATED!");
-          this.$store.commit("updateMatchList", {
-            id: getLevelIndex[0].id,
-            matchDivisionId: this.categList[getCategIndex].id,
-            name: this.categList[getCategIndex].name,
-            level: this.selectedLevel,
-            match: [...studentArray],
-          });
+        this.$store.commit("updateMatchList", {
+          id: getLevelIndex[0].id,
+          matchDivisionId: this.categList[getCategIndex].id,
+          name: this.categList[getCategIndex].name,
+          level: this.selectedLevel,
+          ageBracket: this.selectedAgeBracket,
+          match: [...studentArray],
+        });
       }
-
     },
-    updateMatchList() {},
+    ageGroup(data) {
+      console.log("DATA", data);
+      this.ageMin = data.min;
+      this.ageMax = data.max;
+      this.selectedAgeBracket = data.name;
+    },
     shuffle(array) {
       console.log(array.sort(() => Math.random() - 0.5));
     },
@@ -227,16 +271,20 @@ export default {
       this.selectedLevel = "novice";
       this.getCategoryData();
     }
+    if (this.ageGroupList.length > 0) {
+      this.ageGroup(this.ageGroupList[0]);
+    }
+    this.tab = 0;
   },
 };
 </script>
 
 <style scoped>
 div >>> .match-container {
-  border-radius: 5px;
+  /* border-radius: 5px;
   box-shadow:
     2px 2px 5px #cacaca,
-    inset 2px 2px 5px #e7e7e7;
+    inset 2px 2px 5px #e7e7e7; */
   width: 80%;
   margin: 0 auto;
 }

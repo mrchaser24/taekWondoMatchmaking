@@ -25,18 +25,18 @@ export default {
         id: 1,
         name: "Kids Group",
         min: 1,
-        max: 13,
+        max: 20,
       },
       {
         id: 2,
         name: "Teens Group",
-        min: 14,
-        max: 18,
+        min: 21,
+        max: 40,
       },
       {
         id: 2,
         name: "Adults Group",
-        min: 19,
+        min: 41,
         max: 100,
       },
     ]
@@ -53,6 +53,18 @@ export default {
     },
     deleteCategory(state, id) {
       state.categoryList.splice(id, 1);
+    },
+    addAgeBracket(state, payload) {
+      state.ageGroupList.push(payload);
+    },
+    updateAgeBracket(state, payload) {
+      let getIndex = state.ageGroupList
+        .map((data) => data.id)
+        .indexOf(payload.id);
+      state.ageGroupList[getIndex] = payload;
+    },
+    deleteAgeBracket(state, id) {
+      state.ageGroupList.splice(id, 1);
     },
   },
 };

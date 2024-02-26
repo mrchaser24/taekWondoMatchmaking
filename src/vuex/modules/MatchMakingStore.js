@@ -6,6 +6,7 @@ export default {
         matchDivisionId: "",
         name: "",
         level: "",
+        ageBracket: "",
         match: [],
       },
     ],

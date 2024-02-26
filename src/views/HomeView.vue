@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="d-flex justify-between" style="width: 100%;">
     <div>
-      <v-btn @click="$router.push('/Student')">STUDENT PAGE</v-btn>
+      <!-- <v-btn @click="$router.push('/Student')">STUDENT PAGE</v-btn>
       <v-btn @click="$router.push('/Category')">CATEGORY PAGE</v-btn>
-      <v-btn @click="$router.push('/Matching')">MATCHING PAGE</v-btn>
+      <v-btn @click="$router.push('/Matching')">MATCHING PAGE</v-btn> -->
     </div>
     <div></div>
   </div>
@@ -11,13 +11,20 @@
 
 <script>
 import { mapState } from "vuex";
+import Headers from "./../components/Header.vue"
 
 export default {
+  components:{
+    Headers
+  },
   computed: {
     ...mapState({
       studentList: (state) => state,
     }),
   },
+  mounted(){
+    this.$router.push('/Student')
+  }
 };
 </script>
 
