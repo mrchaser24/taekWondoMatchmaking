@@ -14,6 +14,12 @@ import Headers from "./components/Header.vue"
 export default {
   components:{
     Headers
+  },
+  mounted(){
+    this.storeToLocalStore()
+  },
+  beforeCreate(){
+    this.$store.commit('initialiseStore')
   }
 };
 </script>

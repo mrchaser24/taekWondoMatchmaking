@@ -14,6 +14,9 @@ import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
+// Global JS
+import global from '@/mixins/global.js'
+
 // const stores = createStore(store)
 const vuetify = createVuetify({
   components,
@@ -22,6 +25,7 @@ const vuetify = createVuetify({
 
 const app = createApp(App);
 
+app.mixin(global)
 app.use(vuetify);
 app.use(store);
 app.use(router);
