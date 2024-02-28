@@ -174,6 +174,7 @@ export default {
   },
   watch: {
     selectedCategory(to) {
+      this.selectedLevel = "novice"
       if (to != "") {
         this.getCategoryData();
         this.generateButtonEnabled = false;
