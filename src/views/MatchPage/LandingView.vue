@@ -9,7 +9,7 @@
       </div>
       <div class="d-flex justify-space-between">
         <div>
-          <v-btn class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
+          <v-btn class="global-btn" color="blue-lighten-1" @click="router.push('/')">Go Home</v-btn>
         </div>
         <div>
           <v-btn
@@ -130,152 +130,158 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import FightDiagram from "../../components/MatchComponent/FightDiagram.vue";
-import { mapState } from "vuex";
-export default {
-  components: {
-    FightDiagram,
-  },
-  data: () => ({
-    selectedCategory: 0,
-    selectedLevel: "",
-    generateButtonEnabled: true,
-    minValue: 0,
-    maxValue: 0,
-    matchLevel: ["novice", "advance"],
-    tab: 0,
-    ageMin: 0,
-    ageMax: 0,
-    selectedAgeBracket: "",
-  }),
-  computed: {
-    ...mapState({
-      categList: (state) => state.categoryStore.categoryList,
-      ageGroupList: (state) => state.categoryStore.ageGroupList,
-      matchList: (state) => state.matchMakingStore.matchList,
-      studentList: (state) => state.studentStore.studentList,
-      matchResultList() {
-        let getLevelIndex = this.matchList.filter(
-          (i) =>
-            i.level == this.selectedLevel &&
-            i.ageBracket == this.selectedAgeBracket,
-        );
-        let getIndex = getLevelIndex
-          .map((i) => i.matchDivisionId)
-          .indexOf(this.selectedCategory);
-        return getIndex < 0
-          ? []
-          : getLevelIndex[getIndex] == undefined
-          ? []
-          : getLevelIndex[getIndex].match;
-      },
-    }),
-  },
-  watch: {
-    selectedCategory(to) {
-      this.selectedLevel = "novice"
-      if (to != "") {
-        this.getCategoryData();
-        this.generateButtonEnabled = false;
-      }
-    },
-    selectedLevel(to) {
-      if (to != "") {
-        this.getCategoryData();
-        this.generateButtonEnabled = false;
-      }
-    },
-    tab(to) {
-      this.getCategoryData();
-    },
-  },
-  methods: {
-    printWindows() {
-      window.print();
-    },
-    getCategoryData() {
-      let getIndex = this.categList
-        .map((i) => i.id)
-        .indexOf(this.selectedCategory);
-      this.minValue = this.categList[getIndex].min;
-      this.maxValue = this.categList[getIndex].max;
-    },
-    generateMatching() {
-      let studentArray = [];
-      let getCategIndex = this.categList
-        .map((i) => i.id)
-        .indexOf(this.selectedCategory);
-      let getMatchIndex = this.matchList
-        .map((i) => i.matchDivisionId)
-        .indexOf(this.selectedCategory);
-      let getBracketIndex = this.matchList
-        .filter((i) => i.matchDivisionId == this.selectedCategory)
-        .filter((i) => i.ageBracket == this.selectedAgeBracket);
-      let getLevelIndex = this.matchList
-        .filter((i) => i.matchDivisionId == this.selectedCategory)
-        .filter(
-          (i) =>
-            i.level == this.selectedLevel &&
-            i.ageBracket == this.selectedAgeBracket,
-        );
 
-      this.studentList.forEach((data) => {
-        if (
-          data.weight >= this.minValue &&
-          data.weight <= this.maxValue &&
-          data.level.toLowerCase() == this.selectedLevel.toLowerCase() &&
-          data.age >= this.ageMin &&
-          data.age <= this.ageMax
-        )
-          studentArray.push(data);
-      });
+const store = useStore();
+const router = useRouter();
 
-      if (
-        getMatchIndex < 0 ||
-        (getMatchIndex >= 0 && getLevelIndex.length <= 0)
-      ) {
-        console.log("MATCH GENERATED!");
-        this.$store.commit("addNewMatchList", {
-          matchDivisionId: this.categList[getCategIndex].id,
-          name: this.categList[getCategIndex].name,
-          level: this.selectedLevel,
-          ageBracket: this.selectedAgeBracket,
-          match: [...studentArray],
-        });
-      } else if (getMatchIndex >= 0 && getLevelIndex.length > 0) {
-        console.log("MATCH UPDATED!");
-        this.$store.commit("updateMatchList", {
-          id: getLevelIndex[0].id,
-          matchDivisionId: this.categList[getCategIndex].id,
-          name: this.categList[getCategIndex].name,
-          level: this.selectedLevel,
-          ageBracket: this.selectedAgeBracket,
-          match: [...studentArray],
-        });
-      }
-    },
-    ageGroup(data) {
-      this.ageMin = data.min;
-      this.ageMax = data.max;
-      this.selectedAgeBracket = data.name;
-    },
-    shuffle(array) {
-      console.log(array.sort(() => Math.random() - 0.5));
-    },
-  },
-  mounted() {
-    if (this.categList.length > 0) {
-      this.selectedCategory = 1;
-      this.selectedLevel = "novice";
-      this.getCategoryData();
-    }
-    if (this.ageGroupList.length > 0) {
-      this.ageGroup(this.ageGroupList[0]);
-    }
-    this.tab = 0;
-  },
+// Data
+const selectedCategory = ref(0);
+const selectedLevel = ref("");
+const generateButtonEnabled = ref(true);
+const minValue = ref(0);
+const maxValue = ref(0);
+const matchLevel = ref(["novice", "advance"]);
+const tab = ref(0);
+const ageMin = ref(0);
+const ageMax = ref(0);
+const selectedAgeBracket = ref("");
+
+// Computed properties
+const categList = computed(() => store.state.categoryStore.categoryList);
+const ageGroupList = computed(() => store.state.categoryStore.ageGroupList);
+const matchList = computed(() => store.state.matchMakingStore.matchList);
+const studentList = computed(() => store.state.studentStore.studentList);
+const matchResultList = computed(() => {
+  let getLevelIndex = matchList.value.filter(
+    (i) =>
+      i.level == selectedLevel.value &&
+      i.ageBracket == selectedAgeBracket.value,
+  );
+  let getIndex = getLevelIndex
+    .map((i) => i.matchDivisionId)
+    .indexOf(selectedCategory.value);
+  return getIndex < 0
+    ? []
+    : getLevelIndex[getIndex] == undefined
+    ? []
+    : getLevelIndex[getIndex].match;
+});
+
+// Watchers
+watch(selectedCategory, (to) => {
+  selectedLevel.value = "novice";
+  if (to != "") {
+    getCategoryData();
+    generateButtonEnabled.value = false;
+  }
+});
+
+watch(selectedLevel, (to) => {
+  if (to != "") {
+    getCategoryData();
+    generateButtonEnabled.value = false;
+  }
+});
+
+watch(tab, (to) => {
+  getCategoryData();
+});
+
+// Methods
+const printWindows = () => {
+  window.print();
 };
+
+const getCategoryData = () => {
+  let getIndex = categList.value
+    .map((i) => i.id)
+    .indexOf(selectedCategory.value);
+  minValue.value = categList.value[getIndex].min;
+  maxValue.value = categList.value[getIndex].max;
+};
+
+const generateMatching = () => {
+  let studentArray = [];
+  let getCategIndex = categList.value
+    .map((i) => i.id)
+    .indexOf(selectedCategory.value);
+  let getMatchIndex = matchList.value
+    .map((i) => i.matchDivisionId)
+    .indexOf(selectedCategory.value);
+  let getBracketIndex = matchList.value
+    .filter((i) => i.matchDivisionId == selectedCategory.value)
+    .filter((i) => i.ageBracket == selectedAgeBracket.value);
+  let getLevelIndex = matchList.value
+    .filter((i) => i.matchDivisionId == selectedCategory.value)
+    .filter(
+      (i) =>
+        i.level == selectedLevel.value &&
+        i.ageBracket == selectedAgeBracket.value,
+    );
+
+  studentList.value.forEach((data) => {
+    if (
+      data.weight >= minValue.value &&
+      data.weight <= maxValue.value &&
+      data.level.toLowerCase() == selectedLevel.value.toLowerCase() &&
+      data.age >= ageMin.value &&
+      data.age <= ageMax.value
+    )
+      studentArray.push(data);
+  });
+
+  if (
+    getMatchIndex < 0 ||
+    (getMatchIndex >= 0 && getLevelIndex.length <= 0)
+  ) {
+    console.log("MATCH GENERATED!");
+    store.commit("addNewMatchList", {
+      matchDivisionId: categList.value[getCategIndex].id,
+      name: categList.value[getCategIndex].name,
+      level: selectedLevel.value,
+      ageBracket: selectedAgeBracket.value,
+      match: [...studentArray],
+    });
+  } else if (getMatchIndex >= 0 && getLevelIndex.length > 0) {
+    console.log("MATCH UPDATED!");
+    store.commit("updateMatchList", {
+      id: getLevelIndex[0].id,
+      matchDivisionId: categList.value[getCategIndex].id,
+      name: categList.value[getCategIndex].name,
+      level: selectedLevel.value,
+      ageBracket: selectedAgeBracket.value,
+      match: [...studentArray],
+    });
+  }
+};
+
+const ageGroup = (data) => {
+  ageMin.value = data.min;
+  ageMax.value = data.max;
+  selectedAgeBracket.value = data.name;
+};
+
+const shuffle = (array) => {
+  console.log(array.sort(() => Math.random() - 0.5));
+};
+
+// Lifecycle hooks
+onMounted(() => {
+  if (categList.value.length > 0) {
+    selectedCategory.value = 1;
+    selectedLevel.value = "novice";
+    getCategoryData();
+  }
+  if (ageGroupList.value.length > 0) {
+    ageGroup(ageGroupList.value[0]);
+  }
+  tab.value = 0;
+});
 </script>
 
 <style scoped>

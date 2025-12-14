@@ -9,7 +9,7 @@
       </div>
       <div class=" d-flex justify-space-between">
         <div>
-          <v-btn class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
+          <v-btn class="global-btn" color="blue-lighten-1" @click="router.push('/')">Go Home</v-btn>
         </div>
         <div>
           <AddCategory />
@@ -89,8 +89,10 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 import AddCategory from "../../components/CategoryComponent/AddCategory.vue";
 import DeleteCategory from "../../components/CategoryComponent/DeleteCategory.vue";
@@ -99,27 +101,15 @@ import AddAge from "../../components/CategoryComponent/AddAge.vue";
 import DeleteAge from "../../components/CategoryComponent/DeleteAge.vue";
 import UpdateAge from "../../components/CategoryComponent/UpdateAge.vue";
 
-export default {
-  components: {
-    AddCategory,
-    DeleteCategory,
-    UpdateCategory,
-    AddAge,
-    DeleteAge,
-    UpdateAge,
-  },
-  computed: {
-    ...mapState({
-      categoryList: (state) => state.categoryStore.categoryList,
-      ageGroupList: (state) => state.categoryStore.ageGroupList,
-    }),
-  },
-  data() {
-    return {
-      headers: ["Name", "Age", "Weight", "Belt", "Update"],
-    };
-  },
-};
+const store = useStore();
+const router = useRouter();
+
+// Computed properties
+const categoryList = computed(() => store.state.categoryStore.categoryList);
+const ageGroupList = computed(() => store.state.categoryStore.ageGroupList);
+
+// Data
+const headers = ["Name", "Age", "Weight", "Belt", "Update"];
 </script>
 
 <style></style>

@@ -11,23 +11,22 @@
   </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script setup>
+import { computed, onMounted } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import Headers from "./../components/Header.vue"
 
-export default {
-  components:{
-    Headers
-  },
-  computed: {
-    ...mapState({
-      studentList: (state) => state,
-    }),
-  },
-  mounted(){
-    this.$router.push('/Student')
-  }
-};
+const store = useStore();
+const router = useRouter();
+
+// Computed properties
+const studentList = computed(() => store.state);
+
+// Lifecycle hooks
+onMounted(() => {
+  router.push('/Student');
+});
 </script>
 
 <style></style>

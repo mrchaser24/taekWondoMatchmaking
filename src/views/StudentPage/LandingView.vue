@@ -9,7 +9,7 @@
       </div>
       <div class="d-flex justify-space-between">
         <div>
-          <v-btn  class="global-btn" color="blue-lighten-1" @click="$router.push('/')">Go Home</v-btn>
+          <v-btn  class="global-btn" color="blue-lighten-1" @click="router.push('/')">Go Home</v-btn>
         </div>
         <div>
           <AddStudent />
@@ -62,31 +62,23 @@
   </div>
 </template>
 
-<script>
-// import AddStudent from "./AddStudent.vue";
-import { mapState } from "vuex";
+<script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 import AddStudent from "../../components/StudentComponent/AddStudent.vue";
 import DeleteStudent from "../../components/StudentComponent/DeleteStudent.vue";
 import UpdateStudent from "../../components/StudentComponent/UpdateStudent.vue";
 
-export default {
-  components: {
-    AddStudent,
-    DeleteStudent,
-    UpdateStudent,
-  },
-  computed: {
-    ...mapState({
-      getStudentStore: (state) => state.studentStore.studentList,
-    }),
-  },
-  data() {
-    return {
-      headers: ["Name", "Age", "Weight", "Belt", "Update"],
-    };
-  },
-};
+const store = useStore();
+const router = useRouter();
+
+// Computed properties
+const getStudentStore = computed(() => store.state.studentStore.studentList);
+
+// Data
+const headers = ["Name", "Age", "Weight", "Belt", "Update"];
 </script>
 
 <style></style>
